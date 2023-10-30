@@ -111,6 +111,7 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
         txtDoc = new javax.swing.JTextArea();
         lowPanel = new javax.swing.JPanel();
         wordLabel = new javax.swing.JLabel();
+        statusLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Text Editor");
@@ -508,7 +509,9 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
         lowPanelLayout.setHorizontalGroup(
             lowPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lowPanelLayout.createSequentialGroup()
-                .addContainerGap(898, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(statusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 524, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 368, Short.MAX_VALUE)
                 .addComponent(wordLabel)
                 .addGap(68, 68, 68))
         );
@@ -516,8 +519,14 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
             lowPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(lowPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(wordLabel)
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addGroup(lowPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(lowPanelLayout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(lowPanelLayout.createSequentialGroup()
+                        .addComponent(wordLabel)
+                        .addGap(0, 6, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         getContentPane().add(lowPanel, java.awt.BorderLayout.PAGE_END);
@@ -529,10 +538,6 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
     private void fontStyleScrollActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontStyleScrollActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_fontStyleScrollActionPerformed
-
-    private void shareBttmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shareBttmActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_shareBttmActionPerformed
 
     private void modesBttmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modesBttmActionPerformed
         // TODO add your handling code here:
@@ -549,6 +554,10 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
     private void saveBttmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBttmActionPerformed
         
     }//GEN-LAST:event_saveBttmActionPerformed
+
+    private void shareBttmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shareBttmActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_shareBttmActionPerformed
 
     /**
      * @param args the command line arguments
@@ -624,6 +633,7 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
     private javax.swing.JButton saveBttm;
     private javax.swing.JLayeredPane shapeLabel;
     private javax.swing.JButton shareBttm;
+    private javax.swing.JLabel statusLabel;
     public javax.swing.JToolBar topBarPanel;
     protected javax.swing.JPanel topPanel;
     protected javax.swing.JTabbedPane topTabbedPanel;
@@ -704,7 +714,7 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
         if(ae.getSource()==saveBttm){
             if(dirty){
                 saveFile();
-                System.exit(0);
+          
             } else {
                 JOptionPane.showMessageDialog(this, "No changes have been made.");
             }
@@ -755,9 +765,11 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
                 while((str = reader.readLine()) != null){
                     writer.write(str + System.getProperty("line.separator"));
                 }
+                
                 writer.flush();
                 reader.close();
                 writer.close();
+                statusLabel.setText("Saved " + chooser.getSelectedFile().getAbsolutePath());
                 
             }catch(Exception e){
                 JOptionPane.showMessageDialog(this, "Unable to save file");
