@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent; 
 import java.awt.event.WindowListener;
+import java.awt.print.PrinterException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -288,6 +289,11 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
         printBttm.setContentAreaFilled(false);
         printBttm.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         printBttm.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        printBttm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                printBttmActionPerformed(evt);
+            }
+        });
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -433,6 +439,30 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
         // TODO add your handling code here:
     }//GEN-LAST:event_modesBttmActionPerformed
 
+    private void printBttmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printBttmActionPerformed
+        PrintThread pt = new PrintThread();
+        pt.start();
+    }//GEN-LAST:event_printBttmActionPerformed
+
+    
+    public void printDoc(){
+        int caretLoc = txtDoc.getCaretPosition();
+        java.awt.print.PrinterJob pj = java.awt.print.PrinterJob.getPrinterJob();
+        java.awt.print.PageFormat pf = pj.pageDialog(pj.defaultPage());
+        txtDoc.setCaretPosition(0);
+        JComponentVista vista = new JComponentVista(txtDoc,pf);
+        pj.setPageable(vista);
+        if(pj.printDialog()){
+            try{
+                pj.print();
+            }catch(PrinterException pe){
+                javax.swing.JOptionPane.showMessageDialog(this, "Error Printing File\n" + pe.getLocalizedMessage());
+            }finally{
+                txtDoc.setCaretPosition(caretLoc);
+            }
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */  
@@ -753,5 +783,12 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
     @Override
     public void windowDeactivated(WindowEvent e) {
         
+    }
+    
+    class PrintThread extends Thread{
+        @Override
+        public void run(){
+            printDoc();
+        }
     }
 }
