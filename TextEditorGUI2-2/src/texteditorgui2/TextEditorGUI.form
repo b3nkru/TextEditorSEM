@@ -761,7 +761,9 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="898" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="statusLabel" min="-2" pref="524" max="-2" attributes="0"/>
+                  <EmptySpace pref="368" max="32767" attributes="0"/>
                   <Component id="wordLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="68" max="-2" attributes="0"/>
               </Group>
@@ -771,8 +773,17 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="wordLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="12" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="1" pref="1" max="-2" attributes="0"/>
+                          <Component id="statusLabel" max="32767" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <Component id="wordLabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="6" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -785,6 +796,8 @@
             </Property>
             <Property name="text" type="java.lang.String" value="0 words"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="statusLabel">
         </Component>
       </SubComponents>
     </Container>
