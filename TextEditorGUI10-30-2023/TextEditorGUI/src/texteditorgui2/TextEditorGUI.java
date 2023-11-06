@@ -8,7 +8,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent; 
+import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.print.PrinterException;
 import java.io.BufferedReader;
@@ -29,22 +29,25 @@ import javax.swing.JSeparator;
 import javax.swing.JToggleButton;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 
 /**
  *
  * @author dylanmora
  */
 public class TextEditorGUI extends javax.swing.JFrame implements ActionListener, DocumentListener, WindowListener {
-  Color color = Color.BLACK;
-    private String fName = "Arial" ;
+
+    Color color = Color.BLACK;
+    private String fName = "Arial";
     private int fStyle = 2;
-    private int fSize= 40 ;
+    private int fSize = 40;
     private boolean dirty;
+
     /**
      * Creates new form TextEditorGUI
      */
     public TextEditorGUI() {
-       initComponents();
+        initComponents();
         clearBttm.addActionListener(this);
         editableBttm.addActionListener(this);
         colorChooserBttm.addActionListener(this);
@@ -238,7 +241,7 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
                 .addComponent(clearBttm, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator14, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(152, Short.MAX_VALUE))
+                .addContainerGap(146, Short.MAX_VALUE))
         );
         layeredPanelLayout.setVerticalGroup(
             layeredPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -328,9 +331,9 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
                 .addComponent(printBttm)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 242, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 241, Short.MAX_VALUE)
                 .addComponent(nameLabel)
-                .addContainerGap(440, Short.MAX_VALUE))
+                .addContainerGap(435, Short.MAX_VALUE))
         );
         topBarPanelLayout.setVerticalGroup(
             topBarPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -353,7 +356,7 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
         topPanel.setLayout(topPanelLayout);
         topPanelLayout.setHorizontalGroup(
             topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(layeredPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 958, Short.MAX_VALUE)
+            .addComponent(layeredPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 952, Short.MAX_VALUE)
             .addComponent(topBarPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         topPanelLayout.setVerticalGroup(
@@ -373,7 +376,6 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
 
         wordLabel.setFont(new java.awt.Font("Helvetica", 1, 14)); // NOI18N
         wordLabel.setForeground(new java.awt.Color(102, 102, 102));
-        wordLabel.setText("0 words");
 
         statusLabel.setFont(new java.awt.Font("Helvetica", 1, 14)); // NOI18N
         statusLabel.setForeground(new java.awt.Color(102, 102, 102));
@@ -385,7 +387,7 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lowPanelLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(statusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 729, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 107, Short.MAX_VALUE)
                 .addComponent(wordLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30))
         );
@@ -406,6 +408,11 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
         txtDoc.setColumns(20);
         txtDoc.setRows(5);
         txtDoc.setMargin(new java.awt.Insets(10, 10, 10, 10));
+        txtDoc.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txtDocCaretUpdate(evt);
+            }
+        });
         jScrollPane1.setViewportView(txtDoc);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -413,7 +420,7 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(100, Short.MAX_VALUE)
+                .addContainerGap(94, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 762, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(100, Short.MAX_VALUE))
         );
@@ -444,28 +451,34 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
         pt.start();
     }//GEN-LAST:event_printBttmActionPerformed
 
-    
-    public void printDoc(){
+    private void txtDocCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtDocCaretUpdate
+        try {
+            wordLabel.setText("Line: " + (txtDoc.getLineOfOffset(txtDoc.getCaretPosition()) + 1));
+        } catch (BadLocationException ex) {
+            // L
+        }    }//GEN-LAST:event_txtDocCaretUpdate
+
+    public void printDoc() {
         int caretLoc = txtDoc.getCaretPosition();
         java.awt.print.PrinterJob pj = java.awt.print.PrinterJob.getPrinterJob();
         java.awt.print.PageFormat pf = pj.pageDialog(pj.defaultPage());
         txtDoc.setCaretPosition(0);
-        JComponentVista vista = new JComponentVista(txtDoc,pf);
+        JComponentVista vista = new JComponentVista(txtDoc, pf);
         pj.setPageable(vista);
-        if(pj.printDialog()){
-            try{
+        if (pj.printDialog()) {
+            try {
                 pj.print();
-            }catch(PrinterException pe){
+            } catch (PrinterException pe) {
                 javax.swing.JOptionPane.showMessageDialog(this, "Error Printing File\n" + pe.getLocalizedMessage());
-            }finally{
+            } finally {
                 txtDoc.setCaretPosition(caretLoc);
             }
         }
     }
-    
+
     /**
      * @param args the command line arguments
-     */  
+     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -533,23 +546,23 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
     // End of variables declaration//GEN-END:variables
 
     //Dark Colors
-    Color darkPanelColor = new Color (153,153,153);
-    Color darkTxtDocColor = new Color (51,51,51);
-    Color darkLayeredPanelColor = new Color (102,102,102);
+    Color darkPanelColor = new Color(153, 153, 153);
+    Color darkTxtDocColor = new Color(51, 51, 51);
+    Color darkLayeredPanelColor = new Color(102, 102, 102);
     //Light Colors
-    Color ligthPanelColor = new Color(204,204,204);
-    Color lightTxtDocColor = new Color (252,252,252);
-    Color lightLayeredPanelColor = new Color (255,255,255);
-    
+    Color ligthPanelColor = new Color(204, 204, 204);
+    Color lightTxtDocColor = new Color(252, 252, 252);
+    Color lightLayeredPanelColor = new Color(255, 255, 255);
+
     @Override
     public void actionPerformed(ActionEvent ae) {
         //Background Color
-        if(ae.getSource()==modesBttm){
+        if (ae.getSource() == modesBttm) {
             boolean isSelected2 = modesBttm.isSelected();
-             
-            if(isSelected2){
-                if (isSelected2 = true){
-                   topBarPanel.setBackground(ligthPanelColor);
+
+            if (isSelected2) {
+                if (isSelected2 = true) {
+                    topBarPanel.setBackground(ligthPanelColor);
                     lowPanel.setBackground(ligthPanelColor);
                     jPanel3.setBackground(ligthPanelColor);
                     topPanel.setBackground(ligthPanelColor);
@@ -558,67 +571,65 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
                     txtDoc.setForeground(Color.BLACK);
                     nameLabel.setForeground(Color.BLACK);
                     wordLabel.setForeground(Color.BLACK);
-                statusLabel.setForeground(Color.BLACK);
+                    statusLabel.setForeground(Color.BLACK);
                 }
-            }else {
+            } else {
                 topBarPanel.setBackground(darkPanelColor);
                 lowPanel.setBackground(darkPanelColor);
                 jPanel3.setBackground(darkPanelColor);
                 topPanel.setBackground(darkPanelColor);
-               layeredPanel.setBackground(darkLayeredPanelColor);
+                layeredPanel.setBackground(darkLayeredPanelColor);
                 txtDoc.setBackground(darkTxtDocColor);
                 txtDoc.setForeground(Color.WHITE);
                 nameLabel.setForeground(Color.WHITE);
                 wordLabel.setForeground(Color.WHITE);
                 statusLabel.setForeground(Color.WHITE);
             }
-           
-           
-        }   
-        
-        
-       //Clear all Buttom
-        if(ae.getSource()==clearBttm){
-            int tt = JOptionPane.showOptionDialog(this, "<html><h3><b>Do you want to clear this Document?</b></h3> "+" \n You can't undo this action. </html>", "Clear all", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Clear All","Discard"}, "Clear All");
-                if(tt==0){
-                    txtDoc.setText("");
-                }
+
         }
-        
+
+        //Clear all Buttom
+        if (ae.getSource() == clearBttm) {
+            int tt = JOptionPane.showOptionDialog(this, "<html><h3><b>Do you want to clear this Document?</b></h3> " + " \n You can't undo this action. </html>", "Clear all", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Clear All", "Discard"}, "Clear All");
+            if (tt == 0) {
+                txtDoc.setText("");
+            }
+        }
+
         //Edit and Read Only
-        if(ae.getSource()==editableBttm){
+        if (ae.getSource() == editableBttm) {
             boolean isSelected = editableBttm.isSelected();
-            txtDoc.setEditable(isSelected); 
+            txtDoc.setEditable(isSelected);
         }
-        
+
         //Color Chooser
-        if(ae.getSource()==colorChooserBttm){
-            color = JColorChooser.showDialog(this,"Choose a Color", color);
+        if (ae.getSource() == colorChooserBttm) {
+            color = JColorChooser.showDialog(this, "Choose a Color", color);
             colorChooserBttm.setForeground(color);
             txtDoc.setForeground(color);
         }
-        
-         //Font Name
-        if(ae.getSource()==fontNameScroll){
+
+        //Font Name
+        if (ae.getSource() == fontNameScroll) {
             String selectedFontName = (String) fontNameScroll.getSelectedItem();
             fName = selectedFontName;
-             Font font = new Font(fName,fStyle,fSize);
-             txtDoc.setFont(font);
+            Font font = new Font(fName, fStyle, fSize);
+            txtDoc.setFont(font);
         }
-        
+
         //Font Size
-        if(ae.getSource()== fontSizeScroll){
+        if (ae.getSource() == fontSizeScroll) {
             String selectedFontSizeString = (String) fontSizeScroll.getSelectedItem();
             int selectedFontSize = Integer.parseInt(selectedFontSizeString);
             fSize = selectedFontSize;
-            Font font = new Font(fName,fStyle,fSize);
+            Font font = new Font(fName, fStyle, fSize);
             txtDoc.setFont(font);
         }
-        
+
         //Font Style
-        if(ae.getSource()== fontStyleScroll){
+        if (ae.getSource() == fontStyleScroll) {
             String selectedFontStyleString = (String) fontStyleScroll.getSelectedItem();
-            switch(selectedFontStyleString){
+            switch (selectedFontStyleString) {
                 case "Bold" -> {
                     fStyle = 1;
                 }
@@ -628,45 +639,46 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
                 case "Bold & Italic" -> {
                     fStyle = 3;
                 }
-                default ->{
+                default -> {
                     fStyle = 0;
                 }
             }
-            Font font = new Font(fName,fStyle,fSize);
+            Font font = new Font(fName, fStyle, fSize);
             txtDoc.setFont(font);
         }
-        
+
         //Save 
-        if(ae.getSource()==saveBttm){
-            if(dirty){
+        if (ae.getSource() == saveBttm) {
+            if (dirty) {
                 saveFile();
-          
+
             } else {
                 JOptionPane.showMessageDialog(this, "No changes have been made.");
             }
         }
-        
+
         // New 
-        if(ae.getSource()== addBttm){
-            if(dirty){
+        if (ae.getSource() == addBttm) {
+            if (dirty) {
                 saveFile();
             }
             newFile();
         }
-        if (ae.getSource() == uploadBttm){
-            if(dirty){
+        if (ae.getSource() == uploadBttm) {
+            if (dirty) {
                 saveFile();
             }
             upload();
         }
-        
-    }    
-    public void newFile(){
-    java.awt.Toolkit.getDefaultToolkit().beep();
-    int newValue = JOptionPane.showOptionDialog(this, "Open new document. \nLeave this document. ", "New Document?", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Open","Stay"}, "Create");
+
+    }
+
+    public void newFile() {
+        java.awt.Toolkit.getDefaultToolkit().beep();
+        int newValue = JOptionPane.showOptionDialog(this, "Open new document. \nLeave this document. ", "New Document?", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Open", "Stay"}, "Create");
         txtDoc.setText("");
         dirty = false;
-        if(newValue == 0){
+        if (newValue == 0) {
             File newDoc = new File("filename.txt");
             try {
                 if (newDoc.createNewFile()) {
@@ -681,54 +693,56 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
             }
         }
     }
-    public void saveFile(){
+
+    public void saveFile() {
         java.awt.Toolkit.getDefaultToolkit().beep();
-        int retValue = JOptionPane.showOptionDialog(this, "<html><h3><b>Would you like to save this Document?</b></h3></html>", "Save Changes?", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Save","Discard"}, "Save");
-        if(retValue == 0){
-            try{
+        int retValue = JOptionPane.showOptionDialog(this, "<html><h3><b>Would you like to save this Document?</b></h3></html>", "Save Changes?", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Save", "Discard"}, "Save");
+        if (retValue == 0) {
+            try {
                 File f;
                 JFileChooser chooser = new JFileChooser();
                 int saveValue = chooser.showSaveDialog(this);
-                if(saveValue == JFileChooser.APPROVE_OPTION){
+                if (saveValue == JFileChooser.APPROVE_OPTION) {
                     f = chooser.getSelectedFile();
-                }else{
+                } else {
                     return;
                 }
                 BufferedReader reader = new BufferedReader(new StringReader(txtDoc.getText()));
                 BufferedWriter writer = new BufferedWriter(new FileWriter(f));
                 String str;
-                while((str = reader.readLine()) != null){
+                while ((str = reader.readLine()) != null) {
                     writer.write(str + System.getProperty("line.separator"));
                 }
-                
+
                 writer.flush();
                 reader.close();
                 writer.close();
                 statusLabel.setText("File Saved on:  " + chooser.getSelectedFile().getAbsolutePath());
                 nameLabel.setText(chooser.getDescription(f));
-                
-                }catch(Exception e){
+
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Unable to save file");
-                }
+            }
         }
     }
-    public void upload(){
+
+    public void upload() {
         JFileChooser chooser = new JFileChooser();
         int chooserValue = chooser.showOpenDialog(this);
-        if (chooserValue == JFileChooser.APPROVE_OPTION){
-            try{
+        if (chooserValue == JFileChooser.APPROVE_OPTION) {
+            try {
                 File f;
                 Scanner fin = new Scanner(chooser.getSelectedFile());
                 f = chooser.getSelectedFile();
                 String buffer = "";
-                while(fin.hasNext()){
+                while (fin.hasNext()) {
                     buffer += fin.nextLine() + "\n";
                 }
                 txtDoc.setText(buffer);
                 fin.close();
                 statusLabel.setText("Loaded: " + chooser.getSelectedFile().getAbsolutePath());
                 nameLabel.setText(chooser.getDescription(f));
-            } catch (FileNotFoundException ex){
+            } catch (FileNotFoundException ex) {
                 JOptionPane.showMessageDialog(this, "File not Found");
             }
         }
@@ -751,43 +765,45 @@ public class TextEditorGUI extends javax.swing.JFrame implements ActionListener,
 
     @Override
     public void windowOpened(WindowEvent e) {
-        
+
     }
 
     @Override
     public void windowClosing(WindowEvent e) {
-        if(dirty)
+        if (dirty) {
             saveFile();
+        }
     }
 
     @Override
     public void windowClosed(WindowEvent e) {
-        
+
     }
 
     @Override
     public void windowIconified(WindowEvent e) {
-        
-    } 
+
+    }
 
     @Override
     public void windowDeiconified(WindowEvent e) {
-        
+
     }
 
     @Override
     public void windowActivated(WindowEvent e) {
-        
+
     }
 
     @Override
     public void windowDeactivated(WindowEvent e) {
-        
+
     }
-    
-    class PrintThread extends Thread{
+
+    class PrintThread extends Thread {
+
         @Override
-        public void run(){
+        public void run() {
             printDoc();
         }
     }
